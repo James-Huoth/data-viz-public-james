@@ -1,18 +1,19 @@
+
 import { useEffect, useState } from "react";
 import papa from 'papaparse'
 import "./App.css";
-import type { DemoDataRow, PieDataRow } from "./types";
+import type { CrashDataArray, DemoDataRow, PieDataRow } from "./types";
 import { PieChart, Pie, Cell, LabelList } from "recharts";
 
 const App = () => {
   const [csvData,setCsvData] = useState<DemoDataRow[]>([]);
   const [pieData,setPieData] = useState<PieDataRow[]>([]);
-  const csvFileUrl = '/data/demo.csv'; // FIX ME
+  const csvFileUrl = '/data/GroupData.csv'; // FIX ME
 
   const getData = async () => {
     let response = await fetch(csvFileUrl);
     let text = await response.text();
-    let parsed = await papa.parse<DemoDataRow>(text,{header:true});
+    let parsed = await papa.parse<CrashDataArray>(text,{header:true});
     console.log('Successfully parsed data:',parsed); // Log to make it easy to inspect shape of our data in the inspector
     setCsvData(parsed.data.filter((row)=>row.Name)); // Only keep rows that have a name, so we avoid blank row at end of file
   }
@@ -31,10 +32,10 @@ const App = () => {
       let newPieData : PieDataRow[] = [];
       csvData.forEach(
         (row)=>{
-          if (!newPieCounts[row["Favorite Color"]]) {
-            newPieCounts[row["Favorite Color"]] = 0; // initialize if not there...
+          if (!newPieCounts[row[ "City Town Name" ]]) {
+            newPieCounts[row["Favorite Sport"]] = 0; // initialize if not there...
           }
-          newPieCounts[row["Favorite Color"]]++ // Add one!
+          newPieCounts[row["Favorite Sport"]]++ // Add one!
         }
       )
       for (let key in newPieCounts) {
@@ -64,7 +65,7 @@ const App = () => {
 
       </PieChart>
       {csvData.map(
-        (row,idx)=><div key={idx}>{row.Name} age {row.Age}'s favorite color is {row["Favorite Color"]} and they play {row["Favorite Sport"]}</div>
+        (row,idx)=><div key={idx}>{row.Name} age {row.Age}'s favorite sport is {row["Favorite Sport"]} and they play {row["Favorite Sport"]}</div>
       )}
     </main>
   );
