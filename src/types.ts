@@ -6,6 +6,8 @@ export type DemoDataRow = {
 }
 
 export type CrashDataArray = {
+  Name : string;
+  Age : string;
   'Crash Number': string;
   'City Town Name': string;
   'Crash Date': string;
