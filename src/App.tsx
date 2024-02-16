@@ -5,6 +5,7 @@ import "./App.css";
 import type { CrashDataArray, DemoDataRow, PieDataRow } from "./types";
 import { PieChart, Pie, Cell, LabelList } from "recharts";
 
+
 const App = () => {
   const [csvData,setCsvData] = useState<CrashDataArray[]>([]);
   const [pieData,setPieData] = useState<PieDataRow[]>([]);
@@ -15,7 +16,7 @@ const App = () => {
     let text = await response.text();
     let parsed = await papa.parse<CrashDataArray>(text,{header:true});
     console.log('Successfully parsed data:',parsed); // Log to make it easy to inspect shape of our data in the inspector
-    setCsvData(parsed.data.filter((row)=>row.Name)); // Only keep rows that have a name, so we avoid blank row at end of file
+    setCsvData(parsed.data.filter((row)=>row["Near Intersection Roadway"])); // Only keep rows that have a name, so we avoid blank row at end of file
   }
 
 
@@ -65,7 +66,7 @@ const App = () => {
 
       </PieChart>
       {csvData.map(
-        (row,idx)=><div key={idx}>{row.Name} age favorite sport is {row["City Town Name"]} and they play {row["City Town Name"]}</div>
+        (row,idx)=><div key={idx}>{row.Name} City Town Name : {row["City Town Name"] }| Crash Number : {row["Crash Number"]}| Manner of Collision : {row["Manner of Collision"]} | Latitude : {row["Latitude"]} | Longitude : {row["Longitude"]}</div>
       )}
     </main>
   );
