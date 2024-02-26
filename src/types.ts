@@ -136,5 +136,5 @@ export type CrashDataArray = {
 
 export type PieDataRow = {
   name : string;
-  value : number;
+  crashes : number;
 }

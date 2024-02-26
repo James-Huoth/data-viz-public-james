@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import papa from 'papaparse'
 import "./App.css";
 import type { CrashDataArray, DemoDataRow, PieDataRow } from "./types";
-import { PieChart, Pie, Cell, LabelList } from "recharts";
+import { BarChart, Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend, Cell, LabelList } from "recharts";
 
 
 const App = () => {
@@ -31,19 +31,21 @@ const App = () => {
       // Update whenever data changes...
       let newPieCounts : {[key : string] : number} = {};
       let newPieData : PieDataRow[] = [];
+
       csvData.forEach(
         (row)=>{
-          if (!newPieCounts[row["City Town Name"]]) {
-            newPieCounts[row["City Town Name"]] = 0; // initialize if not there...
+          if (!newPieCounts[row["Manner of Collision"]]) {
+            newPieCounts[row["Manner of Collision"]] = 0; // initialize if not there...
           }
-          newPieCounts[row["City Town Name"]]++ // Add one!
+          newPieCounts[row["Manner of Collision"]]++ // Add one!
         }
       )
       for (let key in newPieCounts) {
         newPieData.push(
-          {name : key, value : newPieCounts[key]}
+          {name : key, crashes : newPieCounts[key]}
         )
       }
+     
       setPieData(newPieData);
       console.log('Set new pie data!',newPieData)
     }
@@ -52,19 +54,18 @@ const App = () => {
 
   return (
     <main style={{maxWidth:800,margin:'auto'}}>
-      <h1>Hello Data Visualization</h1>
+      <h1>Types of Crashes near Intersections </h1>
       <p>Loaded {csvData.length} rows of CSV Data!</p>
-      <h2>Favorite Colors:</h2>
-      <PieChart width={300} height={300}>
-        <Pie data={pieData} dataKey="value" nameKey="name" label fill="yellow">
-          <LabelList dataKey="name" position="middle"/>
-          {
-          pieData.map(
-            (entry)=>(<Cell key={entry.name} fill={entry.name.toLowerCase()} />)
-          )}
-        </Pie>
-
-      </PieChart>
+      <h2>Lowell</h2>
+      <BarChart width={2500} height={500} data={pieData}>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="name" />
+  <YAxis dataKey= "crashes" />
+  <Tooltip />
+  <Legend />
+  <Bar dataKey="crashes" fill="#8884d8" />
+  <Bar dataKey="uv" fill="#82ca9d" />
+</BarChart>
       {csvData.map(
         (row,idx)=><div key={idx}>{row.Name} City Town Name : {row["City Town Name"] }| Crash Number : {row["Crash Number"]}| Manner of Collision : {row["Manner of Collision"]} | Latitude : {row["Latitude"]} | Longitude : {row["Longitude"]}</div>
       )}
