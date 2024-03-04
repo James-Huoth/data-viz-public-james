@@ -5,7 +5,7 @@ export type DemoDataRow = {
   'Favorite Sport':string;
 }
 
-export type CrashDataArray = {
+export type CrashDataRow = {
   Name : string;
   Age : string;
   'Crash Number': string;

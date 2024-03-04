@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from "react";
 import papa from 'papaparse'
 import "./App.css";
-import type { CrashDataArray, DemoDataRow, PieDataRow } from "./types";
+import type { CrashDataRow, DemoDataRow, PieDataRow } from "./types";
 import { BarChart, Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend, Cell, LabelList } from "recharts";
 import MapComponent from "./Map";
 
 
 const App = () => { 
-  const [csvData,setCsvData] = useState<CrashDataArray[]>([]);
+  const [csvData,setCsvData] = useState<CrashDataRow[]>([]);
   const [pieData,setPieData] = useState<PieDataRow[]>([]);
   const [pieData2,setPieData2] = useState<PieDataRow[]>([]);
   const csvFileUrl = '/data/GroupData.csv'; // FIX ME
@@ -38,7 +38,7 @@ crashlist.push(row)
   const getData = async () => {
     let response = await fetch(csvFileUrl);
     let text = await response.text();
-    let parsed = await papa.parse<CrashDataArray>(text,{header:true});
+    let parsed = await papa.parse<CrashDataRow>(text,{header:true});
     console.log('Successfully parsed data:',parsed); // Log to make it easy to inspect shape of our data in the inspector
     setCsvData(parsed.data.filter((row)=>row["Near Intersection Roadway"])); // Only keep rows that have a name, so we avoid blank row at end of file
   }
@@ -52,6 +52,7 @@ crashlist.push(row)
 
   useEffect(
     ()=>{
+   
       // Update whenever data changes...
       let newPieCounts : {[key : string] : number} = {};
       let newPieData : PieDataRow[] = [];
@@ -87,6 +88,7 @@ crashlist.push(row)
      
       setPieData(newPieData);
       setPieData2(newPieData2);
+      
       console.log('Set new pie data!',newPieData)
     }
   ,[csvData])
@@ -94,6 +96,7 @@ crashlist.push(row)
 
   return (
     <main style={{maxWidth:800,margin:'auto'}}>
+      
       <h1>Types of Crashes near Intersectios </h1>
       <p>Loaded {csvData.length} rows of CSV Data!</p>
       <h2>Lowell</h2>
@@ -120,6 +123,7 @@ crashlist.push(row)
       {csvData.map(
         (row,idx)=><div class="crashData" key={idx}>{row.Name} City Town Name : {row["City Town Name"] }| Crash Number : {row["Crash Number"]}| Manner of Collision : {row["Manner of Collision"]} | Latitude : {row["Latitude"]} | Longitude : {row["Longitude"]}</div>
       )}
+      <MapComponent data={csvData}></MapComponent>
     </main>
   );
   

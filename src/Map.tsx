@@ -1,17 +1,19 @@
-import React, {useEffect, useState} from "react"
-import {PieDataRow} from "../types"
+import React, {useEffect, useState} from "react";
 import { RMap, ROSM, RLayerVector, RFeature, ROverlay } from "rlayers";
 import { Point } from "ol/geom";
 import { fromLonLat } from "ol/proj";
 import { Style, Text, Fill } from "ol/style";
+import { CrashDataRow, PieDataRow } from "./types";
 
-//map component 
+//map component
 const Lowell_LAT = 42.640999;
 const Lowell_LON = -71.31671; 
-export const MapComponent = ({ data }: { data: PieDataRow[] }) => {
- // const getLabel = (row: PieDataRow) => row.vulnerableUserType[0].toUpperCase();          Unneeded label //
-  const [theDataPoint, setTheDataPoint] = useState<PieDataRow | null>(null);
+export const MapComponent = ({ data }: { data: CrashDataRow[] }) => {
 
+  const [theDataPoint, setTheDataPoint] = useState<PieDataRow | null>(null);
+  const getLabel = (row: CrashDataRow) => {
+    
+    return row["Manner of Collision"][0] }
   const toggleVisibleDataPoint = (row: PieDataRow, event: any) => {
     if (row == theDataPoint) {
       setTheDataPoint(null);
@@ -19,13 +21,13 @@ export const MapComponent = ({ data }: { data: PieDataRow[] }) => {
       setTheDataPoint(row);
     }
   };
-
+  console.log('Mapping data',data);
   return (
     <section className="map-section">
       {data.length ? (
         <RMap
           className="map"
-          initial={{ center: fromLonLat([Lowell_LON, Lowell_LAT]), zoom: 11 }}
+          initial={{ center: fromLonLat([Lowell_LON, Lowell_LAT]), zoom: 14 }}
         >
           <ROSM />
           <RLayerVector>
@@ -33,11 +35,11 @@ export const MapComponent = ({ data }: { data: PieDataRow[] }) => {
               <RFeature
                 onClick={(event) => toggleVisibleDataPoint(row, event)}
                 key={idx}
-                geometry={new Point(fromLonLat([row.longitude, row.latitude]))}
+                geometry={new Point(fromLonLat([Number(row.Longitude), Number(row.Latitude)]))}
                 style={
                   new Style({
                     text: new Text({
-                      text: getLabel(row),
+                      text:getLabel(row),
                       fill: row.fatalities
                         ? new Fill({ color: "#f00" })
                         : new Fill({ color: "#000" }),
@@ -69,27 +71,28 @@ export const MapComponent = ({ data }: { data: PieDataRow[] }) => {
                         for inspection. Makes it easy to see a given data point if I decide I want
                         to change up what I'm doing with it.
                       */}
-                      {console.log("theDataPoint", theDataPoint) ? "" : ""}
+                      {/*console.log("theDataPoint", theDataPoint) ? "" : ""*/}
                       {/*
                       End lazy console log code :-)
                       */}
-                      {theDataPoint.crashDate.toDateString()}
+                      {/*theDataPoint.CrashDate.toDateString()*/}
                       <br />
-                      {theDataPoint.cityTownName}
+                      {/*theDataPoint.cityTownName*/}
                       <br />
-                      {theDataPoint.vulnerableUserTypes.join(", ")}
+                      {/*theDataPoint.vulnerableUserTypes.join(", ")*/}
                       <br />
                       Injury:{" "}
-                      {theDataPoint.fatalities
+                      {/*theDataPoint.fatalities
                         ? "Fatal"
                         : theDataPoint.nonFatalInjuries
                         ? theDataPoint.severity
-                        : "No injury"}
+                    : "No injury"*/}
                       <br />
-                      {theDataPoint.weatherConditions}
+                      {/*theDataPoint.weatherConditions*/}
                       <br />
+                      
                       <a
-                        href={`https://www.google.com/maps?layer=c&cbll=${row.latitude},${row.longitude}`}
+                        href={`https://www.google.com/maps?layer=c&cbll=${row.Latitude},${row.Longitude}`}
                         target="_STREET"
                       >
                         Open Google Street View
