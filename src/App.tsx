@@ -123,7 +123,11 @@ crashlist.push(row)
       {csvData.map(
         (row,idx)=><div class="crashData" key={idx}>{row.Name} City Town Name : {row["City Town Name"] }| Crash Number : {row["Crash Number"]}| Manner of Collision : {row["Manner of Collision"]} | Latitude : {row["Latitude"]} | Longitude : {row["Longitude"]}</div>
       )}
-      <MapComponent data={csvData}></MapComponent>
+
+<h2>Map of all crashes in Lowell</h2>
+      <MapComponent data={csvData}></MapComponent> 
+      <h2>Map of all crashes near Chelmsford St/Plain St Intersection</h2>
+      <MapComponent data={crashlist}></MapComponent>
     </main>
   );
   
